@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+  <Description about="urn:mozilla:install-manifest">
+    <em:name>Zotero NASA ADS Metadata Updater</em:name>
+    <em:description>Update paper metadata from NASA ADS.</em:description>
+    <em:id>zot-nasa-ads@zot.nasa.ads</em:id>
+    <em:version>0.0.1</em:version>
+    <em:homepageURL>https://github.com/samuelyeew/zot-nasa-ads</em:homepageURL>
+    <em:creator>Samuel Yee</em:creator>
+    <em:type>2</em:type>
+    <em:targetApplication>
+      <Description>
+        <em:id>zotero@chnm.gmu.edu</em:id>
+        <em:minVersion>6.0</em:minVersion>
+        <em:maxVersion>6.</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+  </Description>
+</RDF>
