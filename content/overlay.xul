@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<overlay id="zot-nasa-ads-overlay"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+    <script type="application/javascript" src="chrome://zot-nasa-ads/content/zot-nasa-ads.js"/>
+
+    <!-- Context menu in Zotero item list -->
+    <popup id="zotero-itemmenu">
+        <menuseparator/>
+        <menuitem id="zot-nasa-ads-update-metadata"
+                label="Update Metadata from NASA ADS"
+                oncommand="Zotero.ZotNasaAds.updateMetadataFromNasaAds();"/>
+        <menuitem id="zot-nasa-ads-update-pdf"
+                label="Update PDF from NASA ADS"
+                oncommand="Zotero.ZotNasaAds.updatePdffromNasaAds();"/>
+        <menuseparator/>
+    </popup>
+
+    <!-- Add a new menu item to the Zotero Tools menu -->
+    <menupopup id="menu_ToolsPopup">
+        <menuitem id="zot-nasa-ads-enter-api-key"
+                label="Enter NASA ADS API Key"
+                oncommand="Zotero.ZotNasaAds.promptForApiKey();"/>
+    </menupopup>
+
+</overlay>

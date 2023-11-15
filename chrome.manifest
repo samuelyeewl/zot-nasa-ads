@@ -1,3 +1,4 @@
 content   zot-nasa-ads          content/
 locale    zot-nasa-ads  en-US   locale/en-US
 skin      zot-nasa-ads  default skin/
+overlay   chrome://zotero/content/zoteroPane.xul chrome://zot-nasa-ads/content/overlay.xul
