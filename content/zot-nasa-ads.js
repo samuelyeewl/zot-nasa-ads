@@ -232,12 +232,15 @@ Zotero.ZotNasaAds.updatePdfFromNasaAds = async function() {
 
         // Download and attach the PDF
         // await Zotero.Attachments.addPDFFromURLs(item, [pdfUrl])
+        cookieSandbox = new Zotero.CookieSandbox(null, 'https://ui.adsabs.harvard.edu/',
+            "", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36")
         await Zotero.Attachments.importFromURL({
             libraryID: item.libraryID,
             parentItemID: item.id,
             url: pdfUrl,
             contentType: 'application/pdf',
-            referrer: `https://ui.adsabs.harvard.edu/`
+            referrer: `https://ui.adsabs.harvard.edu/`,
+            cookieSandbox: cookieSandbox,
         })
 
         // // Download the PDF
