@@ -38,13 +38,36 @@ if (selectedItems.length != 1) {
 
 let item = selectedItems[0];
 let doi = item.getField('DOI');
-if (!doi) {
-    Zotero.alert(null, "Zot-NASA-ADS", "No DOI found for the selected item.");
+let queryValue = '';
+
+// If a DOI is available, use it for the query
+if (doi) {
+  queryValue = `doi:${encodeURIComponent(doi)}`;
+} else {
+  // If no DOI is available, check the "Archive ID" field for an arXiv ID
+  let identifier = item.getField('archiveID') || '';
+  // If the "Archive ID" field doesn't contain an arXiv ID, try to parse the "URL" field
+  if (!identifier.includes('arXiv:')) {
+    let url = item.getField('url');
+    let arxivMatch = url.match(/arxiv\.org\/abs\/([0-9\.]+)/i);
+    if (arxivMatch) {
+      identifier = 'arXiv:' + arxivMatch[1];
+    }
+  }
+  // Use the arXiv ID for the query if it's available
+  if (identifier.includes('arXiv:')) {
+    queryValue = identifier;
+  }
+}
+
+// If neither a DOI nor an arXiv ID is available, alert the user and exit
+if (!queryValue) {
+  Zotero.alert(null, "Zot-NASA-ADS", "No identifier (DOI or arXiv ID) found for the selected item.");
     return;
 }
 
 // Define the URL for the NASA ADS API.
-let nasaAdsApiUrl = `https://api.adsabs.harvard.edu/v1/search/query?q=doi:${encodeURIComponent(doi)}&fl=title,author,doi,bibcode,abstract,bibstem,volume,issue,page,pub,issn,pubdate,property,identifier,arxiv_class,doctype&rows=1`;
+let nasaAdsApiUrl = `https://api.adsabs.harvard.edu/v1/search/query?q=${queryValue}&fl=title,author,doi,bibcode,abstract,bibstem,volume,issue,page,pub,issn,pubdate,property,identifier,arxiv_class,doctype&rows=1`;
 
 // Make the HTTP request to the NASA ADS API.
 try {
@@ -67,7 +90,7 @@ try {
     }
 
     let adsData = data.response.docs[0];
-    Zotero.debug(JSON.stringify(adsData))
+    // Zotero.debug(JSON.stringify(adsData))
 
     // Check that there is a non-arXiv result.
     if (adsData.doctype === 'eprint') {
@@ -87,21 +110,24 @@ try {
         let [lastName, firstName] = name.split(", ");
         return { lastName, firstName, creatorType: "author" };
     }));
-    item.setField('abstractNote', adsData.abstract);
-    item.setField('publicationTitle', adsData.pub);
-    item.setField('journalAbbreviation', adsData.bibstem[0])
-    item.setField('volume', adsData.volume);
-    item.setField('issue', adsData.issue);
-    item.setField('pages', adsData.page[0]);
+    if (adsData.abstract) item.setField('abstractNote', adsData.abstract);
+    if (adsData.pub) item.setField('publicationTitle', adsData.pub);
+    if (adsData.bibstem) item.setField('journalAbbreviation', adsData.bibstem[0])
+    if (adsData.volume) item.setField('volume', adsData.volume);
+    if (adsData.issue) item.setField('issue', adsData.issue);
+    if (adsData.pages) item.setField('pages', adsData.page[0]);
+
     // Strip the day from the date if it's not available.
+    if (adsData.pubdate) {
     let formattedPubDate = adsData.pubdate;
     if (formattedPubDate.endsWith("-00")) {
         formattedPubDate = formattedPubDate.substring(0, formattedPubDate.length - 3);
     }
     item.setField('date', formattedPubDate);
-    item.setField('ISSN', adsData.issn[0]);
-    item.setField('DOI', adsData.doi[0]);
-    item.setField('url', `https://doi.org/${adsData.doi[0]}`);
+    }
+    if (adsData.issn) item.setField('ISSN', adsData.issn[0]);
+    if (adsData.doi) item.setField('DOI', adsData.doi[0]);
+    if (adsData.doi) item.setField('url', `https://doi.org/${adsData.doi[0]}`);
 
     // Update the Extra field with additional information, preserving existing data.
     let extraLines = item.getField('extra').split('\n');
@@ -110,9 +136,11 @@ try {
     newExtraLines.push(`ADS Bibcode: ${adsData.bibcode}`);
     if (adsData.property.includes('EPRINT_OPENACCESS')) {
         let arxivId = adsData.identifier.find(id => id.startsWith('arXiv:'));
+        if (arxivId) {
         newExtraLines.push(`tex.archivePrefix: arXiv`);
         newExtraLines.push(`tex.eprint: ${arxivId.replace('arXiv:', '')}`);
-        newExtraLines.push(`tex.primaryClass: ${adsData.arxiv_class}`);
+        }
+        if (adsData.arxiv_class) newExtraLines.push(`tex.primaryClass: ${adsData.arxiv_class[0]}`);
     }
     newExtraLines.push(`tex.adsurl: https://ui.adsabs.harvard.edu/abs/${adsData.bibcode}`);
     newExtraLines.push(`tex.adsnote: Provided by the SAO/NASA Astrophysics Data System`);
