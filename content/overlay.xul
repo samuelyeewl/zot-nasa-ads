@@ -12,7 +12,7 @@
                 oncommand="Zotero.ZotNasaAds.updateMetadataFromNasaAds();"/>
         <menuitem id="zot-nasa-ads-update-pdf"
                 label="Update PDF from NASA ADS"
-                oncommand="Zotero.ZotNasaAds.updatePdffromNasaAds();"/>
+                oncommand="Zotero.ZotNasaAds.updatePdfFromNasaAds();"/>
         <menuseparator/>
     </popup>
 
