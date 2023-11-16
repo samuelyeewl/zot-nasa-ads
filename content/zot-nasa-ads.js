@@ -228,7 +228,7 @@ Zotero.ZotNasaAds.updatePdfFromNasaAds = async function() {
         // Construct the PDF download URL
         let pdfUrl = `https://ui.adsabs.harvard.edu/link_gateway/${data.response.docs[0].bibcode}/PUB_PDF`;
 
-        Zotero.debug(pdfUrl)
+        // Zotero.debug(pdfUrl)
 
         // Download and attach the PDF
         // await Zotero.Attachments.addPDFFromURLs(item, [pdfUrl])

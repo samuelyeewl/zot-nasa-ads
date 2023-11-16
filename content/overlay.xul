@@ -11,7 +11,7 @@
                 label="Update Metadata from NASA ADS"
                 oncommand="Zotero.ZotNasaAds.updateMetadataFromNasaAds();"/>
         <menuitem id="zot-nasa-ads-update-pdf"
-                label="Update PDF from NASA ADS"
+                label="Download Publisher PDF from NASA ADS"
                 oncommand="Zotero.ZotNasaAds.updatePdfFromNasaAds();"/>
         <menuseparator/>
     </popup>
