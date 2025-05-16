@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
     "name": "Zot-NASA-ADS",
-    "version": "0.2.0",
-    "description": "Updates paper metadata from NASA ADS.",
+    "version": "0.5.0",
+    "description": "Updates paper metadata, downloads PDFs, and retrieves citation and reference information from NASA ADS.",
     "author": "Samuel Yee",
     "applications": {
       "zotero": {

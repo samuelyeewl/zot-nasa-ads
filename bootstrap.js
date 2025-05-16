@@ -21,6 +21,11 @@ async function startup({ id, version, rootURI }) {
     });
     ZotNasaAds.init({ id, version, rootURI });
     ZotNasaAds.addToAllWindows();
+    
+    // Register window listener to add UI elements when new windows are opened
+    chromeHandle = Zotero.getMainWindows().length ?
+        { destruct: () => {} } : 
+        Zotero.getWindowManager().registerChrome(onMainWindowLoad, onMainWindowUnload);
 }
 
 function onMainWindowLoad({ window }) {
